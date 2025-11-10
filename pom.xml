@@ -22,6 +22,7 @@
         <surefire.version>3.5.4</surefire.version>
 
         <base.url/>
+        <browser.name>chrome</browser.name>
     </properties>
 
     <dependencies>
@@ -79,6 +80,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <base.url>${base.url}</base.url>
+                        <browser.name>${browser.name}</browser.name>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
