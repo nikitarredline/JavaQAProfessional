@@ -57,7 +57,7 @@
         <profile>
             <id>prod</id>
             <properties>
-                <base.url>https://otus.ru/catalog/courses</base.url>
+                <base.url>https://otus.ru</base.url>
             </properties>
         </profile>
     </profiles>

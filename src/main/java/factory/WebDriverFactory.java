@@ -8,7 +8,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.util.Locale;
 
-public class WEBDriverFactory {
+public class WebDriverFactory {
 
     private String browser = System.getProperty("browser.name").toLowerCase(Locale.ROOT);
 
