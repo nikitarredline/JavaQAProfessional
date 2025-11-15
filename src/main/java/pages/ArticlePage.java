@@ -4,11 +4,11 @@ import annotations.UrlTemplate;
 import org.openqa.selenium.WebDriver;
 
 @UrlTemplate(
-        value = "/lessons/{1}"
+        value = "/article/{1}"
 )
-public class CoursePage extends AbsBasePage<ArticlePage> {
+public class ArticlePage extends AbsBasePage<ArticlePage> {
 
-    public CoursePage(WebDriver driver) {
+    public ArticlePage(WebDriver driver) {
         super(driver);
     }
 }

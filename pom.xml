@@ -10,20 +10,21 @@
 
     <properties>
         <selenium.version>4.38.0</selenium.version>
-        <junit.version>6.0.1</junit.version>
+        <junit.version>5.10.2</junit.version>
         <webdrivermanager.version>6.3.3</webdrivermanager.version>
         <guice.version>7.0.0</guice.version>
         <assertj.version>3.27.6</assertj.version>
 
-        <maven.version>3.14.1</maven.version>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
+        <maven.version>3.13.0</maven.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
 
         <surefire.version>3.5.4</surefire.version>
 
-        <base.url/>
+        <base.url>https://otus.ru</base.url>
         <browser.name>chrome</browser.name>
     </properties>
+
 
     <dependencies>
         <dependency>

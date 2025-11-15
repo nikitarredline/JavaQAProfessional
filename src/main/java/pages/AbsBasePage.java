@@ -6,8 +6,12 @@ import annotations.Urls;
 import commons.AbsCommon;
 import exceptions.PathNotFoundException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
 import java.util.Arrays;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public abstract class AbsBasePage<T> extends AbsCommon {
 
@@ -16,6 +20,9 @@ public abstract class AbsBasePage<T> extends AbsCommon {
     public AbsBasePage(WebDriver driver) {
         super(driver);
     }
+
+    @FindBy(tagName = "h1")
+    private WebElement header;
 
     public String getPath() {
         Class<T> clazz = (Class<T>) this.getClass();
@@ -46,7 +53,7 @@ public abstract class AbsBasePage<T> extends AbsCommon {
             String template = urlTemplate.value();
 
             for(int i=0; i<data.length; i++) {
-                template.replace(String.format("{%d}", i+1), data[i]);
+                template = template.replace(String.format("{%d}", i+1), data[i]);
             }
 
             return template;
@@ -56,8 +63,10 @@ public abstract class AbsBasePage<T> extends AbsCommon {
     }
 
     public T open() {
+        if (baseUrl == null || baseUrl.isEmpty()) {
+            throw new IllegalStateException("System property 'base.url' is not set!");
+        }
         driver.get(baseUrl + getPath());
-
         return (T)this;
     }
 
@@ -65,5 +74,13 @@ public abstract class AbsBasePage<T> extends AbsCommon {
         driver.get(baseUrl + getPathWithData(name, data));
 
         return (T)this;
+    }
+
+    public T pageHeaderShouldBeSameAs(String header) {
+        assertThat(this.header.getText())
+                .as("Error")
+                .isEqualTo(header);
+
+        return (T)(this);
     }
 }

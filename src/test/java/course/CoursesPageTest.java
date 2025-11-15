@@ -13,8 +13,10 @@ public class CoursesPageTest {
     private CoursesPage coursesPage;
 
     @Test
-    public void checkClickCoursePage() {
-        coursesPage.open()
-                .getCourseTitle("qa-engineer");
+    public void checkClickArticleTitle() {
+        String courseName = coursesPage.open()
+                .getCourseName(1);
+        coursesPage.clickCourseByName(courseName)
+                .pageHeaderShouldBeSameAs(courseName);
     }
 }
