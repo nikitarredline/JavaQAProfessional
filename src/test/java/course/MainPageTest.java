@@ -13,9 +13,9 @@ public class MainPageTest {
     private MainPage mainPage;
 
     @Test
-    public void checkClickArticleTitle() {
-        String title = mainPage.open().getPhotoTitleByIndex(1);
-        mainPage.clickArticleByTitle(title)
-                .pageHeaderShouldBeSameAs(title);
+    public void checkCourseCategories() {
+        String categoryName = mainPage.open().getRandomCategory();
+        mainPage.clickCategoryByName(categoryName)
+                .pageCheckboxTrueShouldBeSameAs(categoryName);
     }
 }

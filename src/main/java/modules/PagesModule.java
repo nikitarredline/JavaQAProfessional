@@ -4,10 +4,10 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import org.openqa.selenium.WebDriver;
-import pages.ArticlePage;
 import pages.CoursePage;
 import pages.CoursesPage;
 import pages.MainPage;
+import waiters.Waiter;
 
 public class PagesModule extends AbstractModule {
 
@@ -25,14 +25,14 @@ public class PagesModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public MainPage provideMainPage(WebDriver driver) {
-        return new MainPage(driver);
+    public Waiter provideWaiter() {
+        return new Waiter(driver);
     }
 
     @Provides
     @Singleton
-    public ArticlePage provideArticlePage(WebDriver driver) {
-        return new ArticlePage(driver);
+    public MainPage provideMainPage(WebDriver driver) {
+        return new MainPage(driver);
     }
 
     @Provides

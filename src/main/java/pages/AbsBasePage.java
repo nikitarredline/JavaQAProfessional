@@ -3,13 +3,18 @@ package pages;
 import annotations.Path;
 import annotations.UrlTemplate;
 import annotations.Urls;
+import com.google.inject.Inject;
 import commons.AbsCommon;
 import exceptions.PathNotFoundException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import waiters.Waiter;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Locale;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -21,8 +26,19 @@ public abstract class AbsBasePage<T> extends AbsCommon {
         super(driver);
     }
 
+    @Inject
+    private Waiter waiter;
+
     @FindBy(tagName = "h1")
     private WebElement header;
+
+    @FindBy(css = "div[value='true'] label")
+    private List<WebElement> checkbox;
+
+    private List<WebElement> getCheckbox() {
+        waiter.waitForCondition(d -> !checkbox.isEmpty());
+        return checkbox;
+    }
 
     public String getPath() {
         Class<T> clazz = (Class<T>) this.getClass();
@@ -83,4 +99,22 @@ public abstract class AbsBasePage<T> extends AbsCommon {
 
         return (T)(this);
     }
+
+    public T pageCheckboxTrueShouldBeSameAs(String expectedText) {
+        WebElement target = getCheckbox().stream()
+                .filter(el -> el.getText().equals(expectedText))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException(
+                        "Ёлемент с текстом '" + expectedText + "' не найден"));
+
+        assertThat(target.getText())
+                .as("Error")
+                .isEqualTo(expectedText);
+
+        return (T) this;
+    }
+
+
+    public static final DateTimeFormatter RUS_DATE =
+            DateTimeFormatter.ofPattern("d MMMM, yyyy", new Locale("ru"));
 }

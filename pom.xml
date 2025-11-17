@@ -14,6 +14,7 @@
         <webdrivermanager.version>6.3.3</webdrivermanager.version>
         <guice.version>7.0.0</guice.version>
         <assertj.version>3.27.6</assertj.version>
+        <jsoup.version>1.21.2</jsoup.version>
 
         <maven.version>3.13.0</maven.version>
         <maven.compiler.source>21</maven.compiler.source>
@@ -51,6 +52,11 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jsoup</groupId>
+            <artifactId>jsoup</artifactId>
+            <version>${jsoup.version}</version>
         </dependency>
     </dependencies>
 

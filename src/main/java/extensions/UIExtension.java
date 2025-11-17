@@ -8,6 +8,8 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.openqa.selenium.support.events.WebDriverListener;
 
 public class UIExtension implements BeforeEachCallback, BeforeAllCallback, AfterEachCallback {
 
@@ -26,7 +28,11 @@ public class UIExtension implements BeforeEachCallback, BeforeAllCallback, After
     public void beforeEach(ExtensionContext context) throws Exception {
         driver = webDriverFactory.create();
 
-        Guice.createInjector(new PagesModule(driver)).injectMembers(context.getTestInstance().get());
+        WebDriverListener listener = new HighlightListener(driver);
+        driver = new EventFiringDecorator(listener).decorate(driver);
+
+        Guice.createInjector(new PagesModule(driver))
+                .injectMembers(context.getTestInstance().get());
     }
 
     @Override
