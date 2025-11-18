@@ -1,4 +1,4 @@
-package course;
+package gui;
 
 import com.google.inject.Inject;
 import extensions.UIExtension;
