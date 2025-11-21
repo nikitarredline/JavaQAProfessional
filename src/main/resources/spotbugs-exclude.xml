@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+
+    <!-- Исключение автогенерируемого кода -->
+    <Match>
+        <Class name="~.*\$AutoValue_.*"/>
+    </Match>
+
+    <!-- Исключение классов с аннотациями @Generated -->
+    <Match>
+        <Class annotation="javax.annotation.Generated"/>
+    </Match>
+
+    <!-- Иногда SpotBugs ругается на PageObject'ы, исключаем их -->
+    <Match>
+        <Class name="~.*Page$"/>
+    </Match>
+
+    <!-- Исключение тестов -->
+    <Match>
+        <Class name="~.*Test.*"/>
+    </Match>
+
+</FindBugsFilter>

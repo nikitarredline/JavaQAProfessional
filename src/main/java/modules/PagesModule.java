@@ -4,9 +4,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
 import org.openqa.selenium.WebDriver;
-import pages.CoursePage;
-import pages.CoursesPage;
-import pages.MainPage;
+import org.openqa.selenium.interactions.Actions;
 import waiters.Waiter;
 
 public class PagesModule extends AbstractModule {
@@ -31,19 +29,8 @@ public class PagesModule extends AbstractModule {
 
     @Provides
     @Singleton
-    public MainPage provideMainPage(WebDriver driver) {
-        return new MainPage(driver);
-    }
-
-    @Provides
-    @Singleton
-    public CoursesPage provideCoursesPage(WebDriver driver) {
-        return new CoursesPage(driver);
-    }
-
-    @Provides
-    @Singleton
-    public CoursePage provideCoursePage(WebDriver driver) {
-        return new CoursePage(driver);
+    public Actions provideActions() {
+        return new Actions(driver);
     }
 }
+

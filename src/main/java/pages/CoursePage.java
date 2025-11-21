@@ -4,7 +4,6 @@ import annotations.UrlTemplate;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
-import org.openqa.selenium.WebDriver;
 
 import java.time.LocalDate;
 
@@ -12,10 +11,6 @@ import java.time.LocalDate;
         value = "/lessons/{1}"
 )
 public class CoursePage extends AbsBasePage<CoursePage> {
-
-    public CoursePage(WebDriver driver) {
-        super(driver);
-    }
 
     public boolean courseDateMatching(LocalDate expectedDate) {
         Document doc = Jsoup.parse(driver.getPageSource());

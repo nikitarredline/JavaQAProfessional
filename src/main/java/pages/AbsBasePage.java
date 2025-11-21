@@ -6,10 +6,9 @@ import annotations.Urls;
 import com.google.inject.Inject;
 import commons.AbsCommon;
 import exceptions.PathNotFoundException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import waiters.Waiter;
+import org.openqa.selenium.support.PageFactory;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -22,12 +21,10 @@ public abstract class AbsBasePage<T> extends AbsCommon {
 
     private String baseUrl = System.getProperty("base.url");
 
-    public AbsBasePage(WebDriver driver) {
-        super(driver);
-    }
-
     @Inject
-    private Waiter waiter;
+    public void init() {
+        PageFactory.initElements(driver, this);
+    }
 
     @FindBy(tagName = "h1")
     private WebElement header;

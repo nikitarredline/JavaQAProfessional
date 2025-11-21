@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC
+        "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN"
+        "https://checkstyle.org/dtds/configuration_1_3.dtd">
+
+<module name="Checker">
+
+    <!-- Кодировка -->
+    <property name="charset" value="UTF-8"/>
+
+    <!-- Максимальная длина строки -->
+    <module name="LineLength">
+        <property name="max" value="150"/>
+        <property name="ignorePattern" value="^package.*|^import.*"/>
+    </module>
+
+    <!-- Проверка структуры пакетов -->
+    <module name="PackageDeclaration"/>
+
+    <!-- Требовать наличие пустой строки в конце файла -->
+    <module name="NewlineAtEndOfFile"/>
+
+    <!-- Запрещаем wildcard-импорты -->
+    <module name="AvoidStarImport"/>
+
+    <!-- Проверяем, что имена классов начинаются с заглавной -->
+    <module name="TypeName"/>
+
+    <!-- Имена методов в lowerCamelCase -->
+    <module name="MethodName"/>
+
+    <!-- Имена переменных -->
+    <module name="LocalVariableName"/>
+    <module name="MemberName"/>
+
+    <!-- Отступы 4 пробела -->
+    <module name="Indentation">
+        <property name="basicOffset" value="4"/>
+        <property name="braceAdjustment" value="0"/>
+        <property name="caseIndent" value="4"/>
+        <property name="lineWrappingIndentation" value="8"/>
+    </module>
+
+    <!-- Правильные фигурные скобки -->
+    <module name="LeftCurly"/>
+    <module name="RightCurly"/>
+
+    <!-- Проверка пустых блоков -->
+    <module name="EmptyBlock">
+        <property name="option" value="TEXT"/>
+    </module>
+
+</module>

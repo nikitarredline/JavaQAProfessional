@@ -12,20 +12,16 @@ import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.events.WebDriverListener;
 
 public class UIExtension implements BeforeEachCallback, BeforeAllCallback, AfterEachCallback {
-
-
     private WebDriver driver;
     private WebDriverFactory webDriverFactory = new WebDriverFactory();
 
     @Override
-    public void afterEach(ExtensionContext context) throws Exception {
-        if (driver != null) {
-            driver.quit();
-        }
+    public void beforeAll(ExtensionContext extensionContext) {
+        webDriverFactory.init();
     }
 
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
+    public void beforeEach(ExtensionContext context) {
         driver = webDriverFactory.create();
 
         WebDriverListener listener = new HighlightListener(driver);
@@ -36,7 +32,9 @@ public class UIExtension implements BeforeEachCallback, BeforeAllCallback, After
     }
 
     @Override
-    public void beforeAll(ExtensionContext extensionContext) throws Exception {
-        webDriverFactory.init();
+    public void afterEach(ExtensionContext context) {
+        if (driver != null) {
+            driver.quit();
+        }
     }
 }

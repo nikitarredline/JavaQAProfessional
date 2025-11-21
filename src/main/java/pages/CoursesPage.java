@@ -2,10 +2,8 @@ package pages;
 
 import annotations.Path;
 import com.google.inject.Inject;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import waiters.Waiter;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -16,13 +14,6 @@ import java.util.stream.Collectors;
 
 @Path("/catalog/courses")
 public class CoursesPage extends AbsBasePage<CoursesPage> {
-
-    public CoursesPage(WebDriver driver) {
-        super(driver);
-    }
-
-    @Inject
-    private Waiter waiter;
 
     @Inject
     private CoursePage coursePage;

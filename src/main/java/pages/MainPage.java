@@ -3,26 +3,19 @@ package pages;
 import annotations.Path;
 import com.google.inject.Inject;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
-import waiters.Waiter;
 
 import java.util.List;
 import java.util.Random;
 
 @Path("/")
 public class MainPage extends AbsBasePage<MainPage> {
-
-    public MainPage(WebDriver driver) {
-        super(driver);
-    }
-
-    @Inject
-    private Waiter waiter;
     @Inject
     private CoursesPage coursesPage;
+
+    private static final Random RANDOM = new Random();
 
     @FindBy(css = "nav a[href*='/categories/']")
     private List<WebElement> categories;
@@ -33,8 +26,7 @@ public class MainPage extends AbsBasePage<MainPage> {
     }
 
     public String getRandomCategory() {
-        Random random = new Random();
-        int randomIndex = random.nextInt(get—ategories().size());
+        int randomIndex = RANDOM.nextInt(get—ategories().size());
         return get—ategories().get(randomIndex).getAttribute("textContent").split(" \\(")[0];
     }
 
