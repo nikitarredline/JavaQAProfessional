@@ -23,8 +23,6 @@ public class HighlightListener implements WebDriverListener {
         }
     }
 
-
-
     @Override
     public void beforeClick(WebElement element) {
         highlight(element);

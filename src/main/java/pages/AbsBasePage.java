@@ -9,6 +9,8 @@ import exceptions.PathNotFoundException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import support.GuiceScoped;
+import waiters.Waiter;
 
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
@@ -20,6 +22,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 public abstract class AbsBasePage<T> extends AbsCommon {
 
     private String baseUrl = System.getProperty("base.url");
+
+    @Inject
+    public AbsBasePage(GuiceScoped guiceScoped, Waiter waiter) {
+        super(guiceScoped, waiter);
+    }
 
     @Inject
     public void init() {
@@ -102,7 +109,7 @@ public abstract class AbsBasePage<T> extends AbsCommon {
                 .filter(el -> el.getText().equals(expectedText))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException(
-                        "Элемент с текстом '" + expectedText + "' не найден"));
+                        "Р­Р»РµРјРµРЅС‚ СЃ С‚РµРєСЃС‚РѕРј '" + expectedText + "' РЅРµ РЅР°Р№РґРµРЅ"));
 
         assertThat(target.getText())
                 .as("Error")

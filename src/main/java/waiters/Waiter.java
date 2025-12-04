@@ -1,18 +1,21 @@
 package waiters;
 
+import com.google.inject.Inject;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import support.GuiceScoped;
 
 import java.time.Duration;
 
 public class Waiter {
 
-    private WebDriver driver;
+    private final WebDriver driver;
 
-    public Waiter(WebDriver driver) {
-        this.driver = driver;
+    @Inject
+    public Waiter(GuiceScoped guiceScoped) {
+        this.driver = guiceScoped.getDriver();
     }
 
     public boolean waitForCondition(ExpectedCondition condition) {

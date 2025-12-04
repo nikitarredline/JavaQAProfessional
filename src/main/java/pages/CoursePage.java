@@ -1,9 +1,12 @@
 package pages;
 
 import annotations.UrlTemplate;
+import com.google.inject.Inject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
+import support.GuiceScoped;
+import waiters.Waiter;
 
 import java.time.LocalDate;
 
@@ -11,6 +14,11 @@ import java.time.LocalDate;
         value = "/lessons/{1}"
 )
 public class CoursePage extends AbsBasePage<CoursePage> {
+
+    @Inject
+    public CoursePage(GuiceScoped guiceScoped, Waiter waiter) {
+        super(guiceScoped, waiter);
+    }
 
     public boolean courseDateMatching(LocalDate expectedDate) {
         Document doc = Jsoup.parse(driver.getPageSource());

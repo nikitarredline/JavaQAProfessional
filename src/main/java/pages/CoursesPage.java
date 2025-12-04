@@ -4,6 +4,8 @@ import annotations.Path;
 import com.google.inject.Inject;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import support.GuiceScoped;
+import waiters.Waiter;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,6 +16,11 @@ import java.util.stream.Collectors;
 
 @Path("/catalog/courses")
 public class CoursesPage extends AbsBasePage<CoursesPage> {
+
+    @Inject
+    public CoursesPage(GuiceScoped guiceScoped, Waiter waiter) {
+        super(guiceScoped, waiter);
+    }
 
     @Inject
     private CoursePage coursePage;
@@ -34,11 +41,16 @@ public class CoursesPage extends AbsBasePage<CoursesPage> {
         return courseDates;
     }
 
-    public String getCourseName(int index) {
-        return getCourses().get(index - 1).getText();
+    public String getCourseTitle(int index) {
+        return getCourses().get(index).getText();
     }
 
-    public CoursePage clickCourseByName(String courseName) {
+    public String getRandomCourseTitle() {
+        int index = (int)(Math.random() * courses.size());
+        return getCourseTitle(index);
+    }
+
+    public CoursePage clickCourseByTitle(String courseName) {
         this.clickElementByPredicate.accept(getCourses(), (WebElement element) -> element.getText().equals(courseName));
         return coursePage;
     }

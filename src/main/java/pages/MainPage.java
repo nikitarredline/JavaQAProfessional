@@ -6,12 +6,20 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
+import support.GuiceScoped;
+import waiters.Waiter;
 
 import java.util.List;
 import java.util.Random;
 
 @Path("/")
 public class MainPage extends AbsBasePage<MainPage> {
+
+    @Inject
+    public MainPage(GuiceScoped guiceScoped, Waiter waiter) {
+        super(guiceScoped, waiter);
+    }
+
     @Inject
     private CoursesPage coursesPage;
 
@@ -20,21 +28,21 @@ public class MainPage extends AbsBasePage<MainPage> {
     @FindBy(css = "nav a[href*='/categories/']")
     private List<WebElement> categories;
 
-    private List<WebElement> get—ategories() {
+    private List<WebElement> getCategories() {
         waiter.waitForCondition(d -> !categories.isEmpty());
         return categories;
     }
 
     public String getRandomCategory() {
-        int randomIndex = RANDOM.nextInt(get—ategories().size());
-        return get—ategories().get(randomIndex).getAttribute("textContent").split(" \\(")[0];
+        int randomIndex = RANDOM.nextInt(getCategories().size());
+        return getCategories().get(randomIndex).getAttribute("textContent").split(" \\(")[0];
     }
 
-    public CoursesPage clickCategoryByName(String categoryName) {
-        WebElement training = driver.findElement(By.cssSelector("span[title='Œ·Û˜ÂÌËÂ']"));
+    public CoursesPage clickCategoryByTitle(String categoryName) {
+        WebElement training = driver.findElement(By.cssSelector("span[title='–û–±—É—á–µ–Ω–∏–µ']"));
         Actions actions = new Actions(driver);
         actions.moveToElement(training).perform();
-        this.clickElementByPredicate.accept(get—ategories(), (WebElement element) -> element.getAttribute("textContent").split(" \\(")[0].equals(categoryName));
+        this.clickElementByPredicate.accept(getCategories(), (WebElement element) -> element.getAttribute("textContent").split(" \\(")[0].equals(categoryName));
         return coursesPage;
     }
 }
