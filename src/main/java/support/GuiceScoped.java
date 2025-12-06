@@ -14,11 +14,13 @@ public class GuiceScoped {
     private WebDriver driver;
 
     public GuiceScoped() {
-        driver = new WebDriverFactory().create();
-        driver = new EventFiringDecorator<>(new HighlightListener(driver)).decorate(driver);
     }
 
     public WebDriver getDriver() {
+        if (driver == null) {
+            driver = new WebDriverFactory().create();
+            driver = new EventFiringDecorator<>(new HighlightListener(driver)).decorate(driver);
+        }
         return driver;
     }
 

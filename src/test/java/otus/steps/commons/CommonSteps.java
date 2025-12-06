@@ -9,10 +9,11 @@ public class CommonSteps {
     @Inject
     private GuiceScoped guiceScoped;
 
-    private String baseUrl = System.getProperty("base.url");
+    @Given("{string} browser is open")
+    public void openBrowser(String browserName) {
+        System.setProperty("browser.name", browserName.toLowerCase());
 
-    @Given("Chrome browser is open")
-    public void openBrowser() {
+        String baseUrl = System.getProperty("base.url");
         guiceScoped.getDriver().get(baseUrl);
     }
 }

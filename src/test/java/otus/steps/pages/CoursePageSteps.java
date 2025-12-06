@@ -2,14 +2,12 @@ package otus.steps.pages;
 
 import com.google.inject.Inject;
 import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
 import pages.CoursePage;
 import support.GuiceScoped;
 
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class CoursePageSteps {
 
@@ -19,7 +17,7 @@ public class CoursePageSteps {
     @Inject
     private CoursePage coursePage;
 
-    @Then("The course page opens successfully")
+    @Then("The course page opens by title successfully")
     public void shouldBeOpenedCoursePage() {
         String title = guiceScoped.retrieve("courseTitle");
         assertThat(coursePage.pageHeaderShouldBeSameAs(title));
@@ -28,6 +26,6 @@ public class CoursePageSteps {
     @Then("The course page opens by date successfully")
     public void shouldBeOpenedCoursePageByDate() {
         LocalDate date = guiceScoped.retrieve("courseDate");
-        assertTrue(coursePage.courseDateMatching(date));
+        assertThat(coursePage.courseDateMatching(date));
     }
 }

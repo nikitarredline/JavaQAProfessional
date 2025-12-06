@@ -19,6 +19,7 @@
         <guice.version>7.0.0</guice.version>
         <assertj.version>3.27.6</assertj.version>
         <jsoup.version>1.21.2</jsoup.version>
+        <log4j.version>2.23.1</log4j.version>
 
         <cucumber.version>7.20.1</cucumber.version>
 
@@ -117,6 +118,20 @@
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>${webdrivermanager.version}</version>
+        </dependency>
+
+
+        <!-- log4j -->
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
         </dependency>
     </dependencies>
 

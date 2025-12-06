@@ -42,6 +42,7 @@ public class MainPage extends AbsBasePage<MainPage> {
         WebElement training = driver.findElement(By.cssSelector("span[title='Обучение']"));
         Actions actions = new Actions(driver);
         actions.moveToElement(training).perform();
+        System.out.println(getCategories());
         this.clickElementByPredicate.accept(getCategories(), (WebElement element) -> element.getAttribute("textContent").split(" \\(")[0].equals(categoryName));
         return coursesPage;
     }

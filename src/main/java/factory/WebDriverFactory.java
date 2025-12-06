@@ -11,29 +11,29 @@ import java.util.Locale;
 
 public class WebDriverFactory {
 
-    private String browser = System.getProperty("browser.name").toLowerCase(Locale.ROOT);
+    private String browser;
 
-    public WebDriver create() {
-        switch (browser) {
-            case "chrome": {
-                WebDriverManager.chromedriver().setup();
 
-                return new ChromeDriver((ChromeOptions) new ChromeSettings().settings());
+    private String getBrowser() {
+        if (browser == null) {
+            String property = System.getProperty("browser.name");
+            if (property == null || property.isEmpty()) {
+                throw new BrowserNotSupportedException("Browser not specified in feature file!");
             }
+            browser = property.toLowerCase(Locale.ROOT);
         }
-
-        throw new BrowserNotSupportedException(browser);
+        return browser;
     }
 
-    public void init() {
-        switch (browser) {
+    public WebDriver create() {
+        switch (getBrowser()) {
             case "chrome": {
                 WebDriverManager.chromedriver().setup();
-
-                return;
+                ChromeOptions options = (ChromeOptions) new ChromeSettings().settings();
+                return new ChromeDriver(options);
             }
+            default:
+                throw new BrowserNotSupportedException(getBrowser());
         }
-
-        throw new BrowserNotSupportedException(browser);
     }
 }
