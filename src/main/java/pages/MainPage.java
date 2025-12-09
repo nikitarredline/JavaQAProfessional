@@ -38,12 +38,10 @@ public class MainPage extends AbsBasePage<MainPage> {
         return getCategories().get(randomIndex).getAttribute("textContent").split(" \\(")[0];
     }
 
-    public CoursesPage clickCategoryByTitle(String categoryName) {
-        WebElement training = driver.findElement(By.cssSelector("span[title='ÐžÐ±ÑƒÑ‡ÐµÐ½Ð¸Ðµ']"));
+    public void clickCategoryByTitle(String categoryName) {
+        WebElement training = driver.findElement(By.cssSelector("span[title='Îáó÷åíèå']"));
         Actions actions = new Actions(driver);
         actions.moveToElement(training).perform();
-        System.out.println(getCategories());
-        this.clickElementByPredicate.accept(getCategories(), (WebElement element) -> element.getAttribute("textContent").split(" \\(")[0].equals(categoryName));
-        return coursesPage;
+        this.clickElementByPredicate.accept(getCategories(), (WebElement element) -> element.getAttribute("textContent").split(" \\(")[0].contains(categoryName));
     }
 }

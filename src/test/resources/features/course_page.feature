@@ -2,8 +2,8 @@ Feature: Course Structure
 
   Scenario: Verify course by title page opens
     Given "Chrome" browser is open
-    Given Courses catalog page is opened
-    When I click on a course by title "Дизайн сетей ЦОД"
+    Given Open a "GameDev" category
+    When I click on a course by title "Геймдизайн и левел-дизайн"
     Then The course page opens by title successfully
 
   Scenario: Verify random course page opens
@@ -31,7 +31,7 @@ Feature: Course Structure
     When Courses catalog page is opened
     Then Print courses starting from earliest date "2025-11-24"
 
-  Scenario: qweqe
+  Scenario: Print cheapest and most expensive courses
     Given "Chrome" browser is open
-    Given Open a preparatory category
-    Then The course page opens by title successfully
+    Given Open a "Подготовительные курсы" category
+    When Get preparatory courses price

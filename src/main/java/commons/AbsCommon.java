@@ -2,6 +2,7 @@ package commons;
 
 import com.google.inject.Inject;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import support.GuiceScoped;
@@ -30,21 +31,28 @@ public abstract class AbsCommon {
             (elements, elementPredicate) -> elements.stream()
                     .filter(elementPredicate)
                     .findFirst()
-                    .map(element -> {
-                        boolean clickable = waiter.waitForCondition(driver -> {
-                            try {
-                                return element.isDisplayed() && element.isEnabled();
-                            } catch (Exception e) {
-                                return false;
-                            }
-                        });
-
-                        if (clickable) {
-                            element.click();
-                            return element;
-                        } else {
-                            throw new RuntimeException("Element найден, но не кликабельный после ожидания");
-                        }
-                    })
+                    .map(this::scrollAndClick)
                     .orElseThrow(() -> new RuntimeException("Element не найден по предикату"));
+
+    public WebElement scrollAndClick(WebElement element) {
+        ((JavascriptExecutor) driver).executeScript(
+                "arguments[0].scrollIntoView({behavior: 'auto', block: 'center', inline: 'center'});",
+                element
+        );
+
+        boolean clickable = waiter.waitForCondition(d -> {
+            try {
+                return element.isDisplayed() && element.isEnabled();
+            } catch (Exception e) {
+                return false;
+            }
+        });
+
+        if (!clickable) {
+            throw new RuntimeException("Element найден, но не кликабельный после ожидания");
+        }
+
+        element.click();
+        return element;
+    }
 }

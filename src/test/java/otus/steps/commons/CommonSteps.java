@@ -11,6 +11,7 @@ public class CommonSteps {
 
     @Given("{string} browser is open")
     public void openBrowser(String browserName) {
+        System.setProperty("cucumber.features.encoding", "UTF-8");
         System.setProperty("browser.name", browserName.toLowerCase());
 
         String baseUrl = System.getProperty("base.url");

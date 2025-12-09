@@ -144,7 +144,6 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>${maven.version}</version>
                 <configuration>
-                    <encoding>UTF-8</encoding>
                     <target>${maven.compiler.target}</target>
                     <source>${maven.compiler.source}</source>
                 </configuration>
@@ -156,7 +155,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${surefire.version}</version>
                 <configuration>
-                    <argLine>-Dfile.encoding=UTF-8</argLine>
                     <systemPropertyVariables>
                         <base.url>${base.url}</base.url>
                         <browser.name>${browser.name}</browser.name>

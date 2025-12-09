@@ -27,8 +27,8 @@ public class MainPageSteps {
         guiceScoped.store(title, "categoryTitle");
     }
 
-    @When("Open a preparatory category")
-    public void clickPreparatoryCoursesCategory() {
-        mainPage.clickCategoryByTitle("Подготовительные курсы");
+    @When("Open a {string} category")
+    public void clickCategory(String category) {
+        mainPage.clickCategoryByTitle(category);
     }
 }

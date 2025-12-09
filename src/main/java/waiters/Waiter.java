@@ -1,9 +1,12 @@
 package waiters;
 
 import com.google.inject.Inject;
+import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import support.GuiceScoped;
 
@@ -26,4 +29,10 @@ public class Waiter {
             return false;
         }
     }
+
+    public WebElement waitForElement(By locator) {
+        return new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
 }

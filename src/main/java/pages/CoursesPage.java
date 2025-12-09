@@ -4,6 +4,8 @@ import annotations.Path;
 import com.google.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import support.GuiceScoped;
@@ -14,6 +16,9 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Path("/catalog/courses")
 public class CoursesPage extends AbsBasePage<CoursesPage> {
@@ -28,11 +33,14 @@ public class CoursesPage extends AbsBasePage<CoursesPage> {
     @Inject
     private CoursePage coursePage;
 
-    @FindBy(css = "section a[href^='/lessons/'] h6 div")
+    @FindBy(css = "section a[href^='/lessons/'] h6")
     private List<WebElement> courses;
 
     @FindBy(css = "section a > div:last-of-type div div")
     private List<WebElement> courseDates;
+
+    @FindBy(css = "section a[href^='/online/'] h6")
+    private List<WebElement> onlineCourses;
 
     private List<WebElement> getCourses() {
         waiter.waitForCondition(d -> !courses.isEmpty());
@@ -44,14 +52,20 @@ public class CoursesPage extends AbsBasePage<CoursesPage> {
         return courseDates;
     }
 
+    public List<WebElement> getOnlineCourses() {
+        WebElement showAllButton = waiter.waitForElement(By.cssSelector("main section:nth-child(2) div button"));
+        scrollAndClick(showAllButton);
+        waiter.waitForCondition(d -> !onlineCourses.isEmpty());
+        return onlineCourses;
+    }
+
     public String getRandomCourseTitle() {
         int index = (int)(Math.random() * courses.size());
         return getCourses().get(index).getText();
     }
 
-    public CoursePage clickCourseByTitle(String courseTitle) {
+    public void clickCourseByTitle(String courseTitle) {
         this.clickElementByPredicate.accept(getCourses(), (WebElement element) -> element.getText().equals(courseTitle));
-        return coursePage;
     }
 
     public List<LocalDate> getAllCourseDates() {
@@ -102,7 +116,7 @@ public class CoursesPage extends AbsBasePage<CoursesPage> {
         }
 
         if (matchedCourses.isEmpty()) {
-            throw new RuntimeException("–ö—É—Ä—Å—ã —Å –¥–∞—Ç–æ–π " + date + " –Ω–µ –Ω–∞–π–¥–µ–Ω—ã");
+            throw new RuntimeException(" ÛÒ˚ Ò ‰‡ÚÓÈ " + date + " ÌÂ Ì‡È‰ÂÌ˚");
         }
 
         return matchedCourses;
@@ -143,12 +157,42 @@ public class CoursesPage extends AbsBasePage<CoursesPage> {
     public void printCoursesFromEarliestDate(LocalDate date) {
         Map<String, LocalDate> courses = getAllCoursesWithDates();
 
-        log.info("=== –ö–£–†–°–´, –ù–ê–ß–ò–ù–ê–Æ–©–ò–ï–°–Ø –° {} –ò –ü–û–ó–ñ–ï ===", date);
+        log.info("===  ”–—€, Õ¿◊»Õ¿ﬁŸ»≈—ﬂ — {} » œŒ«∆≈ ===", date);
 
         courses.entrySet().stream()
                 .filter(e -> !e.getValue().isBefore(date))
-                .forEach(e -> log.info("–ö—É—Ä—Å: {} | –î–∞—Ç–∞ —Å—Ç–∞—Ä—Ç–∞: {}", e.getKey(), e.getValue()));
+                .forEach(e -> log.info(" ÛÒ: {} | ƒ‡Ú‡ ÒÚ‡Ú‡: {}", e.getKey(), e.getValue()));
 
         log.info("============================================");
+    }
+
+    public Map<String, Integer> getCoursePrices() {
+        Map<String, Integer> coursePrices = new LinkedHashMap<>();
+        List<WebElement> onlineCourses = getOnlineCourses();
+        for (int i = 0; i < onlineCourses.size(); i++) {
+            String title = onlineCourses.get(i).getText();
+            this.clickElementByPredicate.accept(onlineCourses, (WebElement element) -> element.getText().equals(title));
+            String priceText = "";
+            try {
+                priceText = driver.findElement(By.cssSelector("div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2)")).getText();
+            } catch (NoSuchElementException e) {
+                priceText = driver.findElement(By.xpath("//a[text()='«‡ÔËÒ‡Ú¸Òˇ Ì‡ ÍÛÒ']/parent::div/preceding-sibling::div[2]//div")).getText();
+            }
+            int price = Integer.parseInt(priceText.replaceAll("\\D", ""));
+            coursePrices.put(title, price);
+            driver.navigate().back();
+            waiter.waitForCondition(d -> getOnlineCourses().size() == onlineCourses.size());
+        }
+        Map<String, Integer> sortedByPriceDesc = coursePrices.entrySet().stream()
+                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+
+        System.out.println(sortedByPriceDesc);
+        return sortedByPriceDesc;
     }
 }

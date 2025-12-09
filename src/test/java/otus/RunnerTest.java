@@ -9,5 +9,6 @@ import org.junit.platform.suite.api.Suite;
 @IncludeEngines("cucumber")
 @SelectClasspathResource("features")
 @ConfigurationParameter(key = "cucumber.glue", value = "otus")
+@ConfigurationParameter(key = "cucumber.features.encoding", value = "UTF-8")
 public class RunnerTest {
 }

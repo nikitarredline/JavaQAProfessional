@@ -69,4 +69,9 @@ public class CoursesPageSteps {
         LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
         coursesPage.printCoursesFromEarliestDate(date);
     }
+
+    @When("Get preparatory courses price")
+    public void getCoursePricesqwe() {
+        coursesPage.getCoursePrices();
+    }
 }
