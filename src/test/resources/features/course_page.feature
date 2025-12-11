@@ -31,7 +31,8 @@ Feature: Course Structure
     When Courses catalog page is opened
     Then Print courses starting from earliest date "2025-11-24"
 
-  Scenario: Print cheapest and most expensive courses
+  Scenario: Search cheapest and most expensive courses
     Given "Chrome" browser is open
     Given Open a "Подготовительные курсы" category
     When Get preparatory courses price
+    Then Print courses price

@@ -27,14 +27,30 @@ public abstract class AbsCommon {
         return driver.findElement(selector);
     }
 
-    public final BiConsumer<List<WebElement>, Predicate<WebElement>> clickElementByPredicate =
-            (elements, elementPredicate) -> elements.stream()
+    public BiConsumer<List<WebElement>, Predicate<WebElement>> clickElementByPredicate() {
+        return (elements, elementPredicate) -> {
+            WebElement el = elements.stream()
                     .filter(elementPredicate)
                     .findFirst()
-                    .map(this::scrollAndClick)
                     .orElseThrow(() -> new RuntimeException("Element не найден по предикату"));
 
-    public WebElement scrollAndClick(WebElement element) {
+            boolean clickable = waiter.waitForCondition(driver -> {
+                try {
+                    return el.isDisplayed() && el.isEnabled();
+                } catch (Exception e) {
+                    return false;
+                }
+            });
+
+            if (!clickable) {
+                throw new RuntimeException("Элемент найден, но не кликабельный после ожидания");
+            }
+
+            scrollAndClick(el);
+        };
+    }
+
+    public final WebElement scrollAndClick(WebElement element) {
         ((JavascriptExecutor) driver).executeScript(
                 "arguments[0].scrollIntoView({behavior: 'auto', block: 'center', inline: 'center'});",
                 element

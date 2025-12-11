@@ -9,6 +9,7 @@ import support.GuiceScoped;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,6 +59,13 @@ public class CoursesPageSteps {
         guiceScoped.store(date, "courseDate");
     }
 
+    @When("Get preparatory courses price")
+    public void getCoursesPrice() {
+        Map<String, Integer> price = coursesPage.getCoursesPrice();
+
+        guiceScoped.store(price, "coursesPrice");
+    }
+
     @Then("The category page checkbox successfully")
     public void shouldBeOpenedCoursePageByDate() {
         String title = guiceScoped.retrieve("categoryTitle");
@@ -70,8 +78,10 @@ public class CoursesPageSteps {
         coursesPage.printCoursesFromEarliestDate(date);
     }
 
-    @When("Get preparatory courses price")
-    public void getCoursePricesqwe() {
-        coursesPage.getCoursePrices();
+    @Then("Print courses price")
+    public void printCoursesPrice() {
+        Map<String, Integer> price = guiceScoped.retrieve("coursesPrice");
+
+        coursesPage.printCoursesPrice(price);
     }
 }

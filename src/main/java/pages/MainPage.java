@@ -39,9 +39,11 @@ public class MainPage extends AbsBasePage<MainPage> {
     }
 
     public void clickCategoryByTitle(String categoryName) {
+        waiter.waitForCondition(d -> !d.findElements(By.cssSelector("div.before-header")).isEmpty()
+                && d.findElements(By.cssSelector("div.before-header")).get(0).isDisplayed());
         WebElement training = driver.findElement(By.cssSelector("span[title='Обучение']"));
         Actions actions = new Actions(driver);
         actions.moveToElement(training).perform();
-        this.clickElementByPredicate.accept(getCategories(), (WebElement element) -> element.getAttribute("textContent").split(" \\(")[0].contains(categoryName));
+        this.clickElementByPredicate().accept(getCategories(), (WebElement element) -> element.getAttribute("textContent").split(" \\(")[0].contains(categoryName));
     }
 }

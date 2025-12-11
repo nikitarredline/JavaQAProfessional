@@ -5,7 +5,6 @@ import com.google.inject.Inject;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
-import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import support.GuiceScoped;
@@ -17,11 +16,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 @Path("/catalog/courses")
 public class CoursesPage extends AbsBasePage<CoursesPage> {
+
+    private final Random random = new Random();
 
     private static final Logger log = LogManager.getLogger(CoursesPage.class);
 
@@ -53,10 +51,14 @@ public class CoursesPage extends AbsBasePage<CoursesPage> {
     }
 
     public List<WebElement> getOnlineCourses() {
-        WebElement showAllButton = waiter.waitForElement(By.cssSelector("main section:nth-child(2) div button"));
-        scrollAndClick(showAllButton);
-        waiter.waitForCondition(d -> !onlineCourses.isEmpty());
-        return onlineCourses;
+        int before = onlineCourses.size();
+        Optional<WebElement> showAllButton = driver
+                .findElements(By.cssSelector("main section:nth-child(2) div button"))
+                .stream()
+                .findFirst();
+        showAllButton.ifPresent(this::scrollAndClick);
+        waiter.waitForCondition(d -> onlineCourses.size() > before);
+        return new ArrayList<>(onlineCourses);
     }
 
     public String getRandomCourseTitle() {
@@ -65,7 +67,7 @@ public class CoursesPage extends AbsBasePage<CoursesPage> {
     }
 
     public void clickCourseByTitle(String courseTitle) {
-        this.clickElementByPredicate.accept(getCourses(), (WebElement element) -> element.getText().equals(courseTitle));
+        this.clickElementByPredicate().accept(getCourses(), (WebElement element) -> element.getText().equals(courseTitle));
     }
 
     public List<LocalDate> getAllCourseDates() {
@@ -124,7 +126,7 @@ public class CoursesPage extends AbsBasePage<CoursesPage> {
 
     public String clickRandomCourseByDate(LocalDate date) {
         List<String> courses = getCourseTitlesByDate(date);
-        String randomCourse = courses.get(new Random().nextInt(courses.size()));
+        String randomCourse = courses.get(random.nextInt(courses.size()));
         clickCourseByTitle(randomCourse);
         return randomCourse;
     }
@@ -166,33 +168,58 @@ public class CoursesPage extends AbsBasePage<CoursesPage> {
         log.info("============================================");
     }
 
-    public Map<String, Integer> getCoursePrices() {
-        Map<String, Integer> coursePrices = new LinkedHashMap<>();
+    public Map<String, Integer> getCoursesPrice() {
+        Map<String, Integer> coursePrices = new HashMap<>();
+
         List<WebElement> onlineCourses = getOnlineCourses();
-        for (int i = 0; i < onlineCourses.size(); i++) {
-            String title = onlineCourses.get(i).getText();
-            this.clickElementByPredicate.accept(onlineCourses, (WebElement element) -> element.getText().equals(title));
-            String priceText = "";
-            try {
-                priceText = driver.findElement(By.cssSelector("div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2)")).getText();
-            } catch (NoSuchElementException e) {
-                priceText = driver.findElement(By.xpath("//a[text()='Çàïèñàòüñÿ íà êóðñ']/parent::div/preceding-sibling::div[2]//div")).getText();
-            }
+        List<String> courseTitles = onlineCourses.stream()
+                .map(WebElement::getText)
+                .toList();
+
+        for (String title : courseTitles) {
+            WebElement courseElement = onlineCourses.stream()
+                    .filter(e -> e.getText().equals(title))
+                    .findFirst()
+                    .orElseGet(() -> getOnlineCourses().stream()
+                            .filter(e -> e.getText().equals(title))
+                            .findFirst()
+                            .orElseThrow(() -> new RuntimeException("Êóðñ íå íàéäåí: " + title)));
+
+            scrollAndClick(courseElement);
+
+            String priceText = waiter.waitForAnyText(
+                    By.cssSelector("div:nth-child(2) > div:nth-child(1) > div:nth-child(3) > div:nth-child(2)"),
+                    By.xpath("//a[text()='Çàïèñàòüñÿ íà êóðñ']/parent::div/preceding-sibling::div[2]//div")
+            );
+
             int price = Integer.parseInt(priceText.replaceAll("\\D", ""));
             coursePrices.put(title, price);
-            driver.navigate().back();
-            waiter.waitForCondition(d -> getOnlineCourses().size() == onlineCourses.size());
-        }
-        Map<String, Integer> sortedByPriceDesc = coursePrices.entrySet().stream()
-                .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue,
-                        (e1, e2) -> e1,
-                        LinkedHashMap::new
-                ));
 
-        System.out.println(sortedByPriceDesc);
-        return sortedByPriceDesc;
+            driver.navigate().back();
+            onlineCourses = getOnlineCourses();
+        }
+
+        return coursePrices;
     }
+
+    public void printCoursesPrice(Map<String, Integer> prices) {
+        log.info("=== ÑÀÌÛÅ ÄÅØÅÂÛÅ È ÑÀÌÛÅ ÄÎÐÎÃÈÅ ÊÓÐÑÛ ===");
+
+        int minPrice = prices.values().stream()
+                .min(Integer::compareTo)
+                .orElseThrow();
+
+        int maxPrice = prices.values().stream()
+                .max(Integer::compareTo)
+                .orElseThrow();
+
+        prices.entrySet().stream()
+                .filter(e -> e.getValue() == minPrice || e.getValue() == maxPrice)
+                .forEach(e ->
+                        log.info("Êóðñ: {} | Öåíà: {}", e.getKey(), e.getValue())
+                );
+
+        log.info("=========================================");
+    }
+
 }

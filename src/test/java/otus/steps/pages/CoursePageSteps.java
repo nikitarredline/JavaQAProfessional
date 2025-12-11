@@ -28,10 +28,4 @@ public class CoursePageSteps {
         LocalDate date = guiceScoped.retrieve("courseDate");
         assertThat(coursePage.courseDateMatching(date));
     }
-
-//    @Then("Get course price")
-//    public void getCoursePrice() {
-//        LocalDate date = guiceScoped.retrieve("courseDate");
-//        assertThat(coursePage.courseDateMatching(date));
-//    }
 }
