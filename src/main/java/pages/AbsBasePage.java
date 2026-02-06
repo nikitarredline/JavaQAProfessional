@@ -102,7 +102,7 @@ public abstract class AbsBasePage<T> extends AbsCommon {
                 .filter(el -> el.getText().equals(expectedText))
                 .findFirst()
                 .orElseThrow(() -> new RuntimeException(
-                        "Элемент с текстом '" + expectedText + "' не найден"));
+                        "Р­Р»РµРјРµРЅС‚ СЃ С‚РµРєСЃС‚РѕРј '" + expectedText + "' РЅРµ РЅР°Р№РґРµРЅ"));
 
         assertThat(target.getText())
                 .as("Error")
