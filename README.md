@@ -5,8 +5,8 @@ mvn clean test
 -Dremote.url=http://&lt;host&gt;/wd/hub -Dbrowser.name=chrome -Dbrowser.version=128.0
 
 Поддерживаемые браузеры:  
-- chrome 128  
-- chrome 127  
+- chrome 128.0
+- chrome 127.0
 
 Для удаленного запуска тестов с мобильной эмуляцией также добавить параметр:  
 -DdeviceName=&lt;device&gt;
