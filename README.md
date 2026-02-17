@@ -1,11 +1,22 @@
-для локального запуска тестов выполнить команду mvn clean test
-для удаленного запуска тестов добавить параметр -Dbase.url=http://<host>:<port>/api -Dremote.url=http://<host>/wd/hub -Dbrowser.name=chrome -Dbrowser.version=128.0
-поддерживаемые браузеры: chrome 128, chrome 127
-для удаленного запуска тестов с мобильной эмуляцией также добавить параметр -DdeviceName=<device>
-список поддерживаемых устройств:
-          iPhoneX,
-          iPhone8,
-          iPhone8Plus,
-          GalaxyS5,
-          Pixel2
-для эмуляции кастомного разрешения при мобильной эмуляции использовать параметр -Dbrowser.windowSize=<WIDTH,HEIGHT>
+Для локального запуска тестов выполнить команду:  
+mvn clean test
+
+Для удаленного запуска тестов добавить параметры:  
+-Dremote.url=http://&lt;host&gt;/wd/hub -Dbrowser.name=chrome -Dbrowser.version=128.0
+
+Поддерживаемые браузеры:  
+- chrome 128  
+- chrome 127  
+
+Для удаленного запуска тестов с мобильной эмуляцией также добавить параметр:  
+-DdeviceName=&lt;device&gt;
+
+Список поддерживаемых устройств:  
+- iPhoneX  
+- iPhone8  
+- iPhone8Plus  
+- GalaxyS5  
+- Pixel2  
+
+Для эмуляции кастомного разрешения при мобильной эмуляции использовать параметр:  
+-Dbrowser.windowSize=<WIDTH,HEIGHT>
