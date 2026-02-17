@@ -1,52 +1,56 @@
 package factory.settings;
 
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.AbstractDriverOptions;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
-public class ChromeSettings implements ISettings {
+public class ChromeSettings {
 
-    private boolean remote = false;
-    private String testName = "Default Test";
-    private String browserVersion = "latest"; // версия браузера для Selenoid
+    private final boolean isRemote;
+    private final String testName;
+    private final String browserVersion;
+    private final String deviceName;
+    private final String windowSize;
 
-    public ChromeSettings() {}
-
-    public ChromeSettings(boolean remote, String testName, String browserVersion) {
-        this.remote = remote;
+    public ChromeSettings(boolean isRemote, String testName, String browserVersion, String deviceName, String windowSize) {
+        this.isRemote = isRemote;
         this.testName = testName;
         this.browserVersion = browserVersion;
+        this.deviceName = deviceName;
+        this.windowSize = windowSize;
     }
 
-    @Override
-    public AbstractDriverOptions settings() {
-        ChromeOptions chromeOptions = new ChromeOptions();
+    public ChromeOptions settings() {
+        ChromeOptions options = new ChromeOptions();
 
-        // Общие настройки Chrome
-        chromeOptions.addArguments("--start-fullscreen");
-        chromeOptions.addArguments("--disable-blink-features=AutomationControlled");
-        chromeOptions.setExperimentalOption("excludeSwitches", Arrays.asList("enable-automation"));
-        chromeOptions.setExperimentalOption("useAutomationExtension", false);
-        chromeOptions.addArguments("--disable-infobars");
+        options.addArguments("--disable-blink-features=AutomationControlled");
+        options.addArguments("--disable-infobars");
+        options.addArguments("--start-maximized");
+        options.addArguments("--ignore-certificate-errors");
 
-        Map<String, Object> prefs = new HashMap<>();
-        prefs.put("credentials_enable_service", false);
-        prefs.put("profile.password_manager_enabled", false);
-        chromeOptions.setExperimentalOption("prefs", prefs);
-
-        // Настройки для Selenoid
-        if (remote) {
-            Map<String, Object> selenoidOptions = new HashMap<>();
-            selenoidOptions.put("name", testName);        // имя теста
-            selenoidOptions.put("enableVideo", true);     // запись видео
-            selenoidOptions.put("env", Arrays.asList("TZ=UTC")); // таймзона
-            chromeOptions.setCapability("selenoid:options", selenoidOptions);
-
-            // Версия браузера для Selenoid
-            chromeOptions.setCapability("browserVersion", browserVersion);
+        if (deviceName != null && !deviceName.isBlank()) {
+            Map<String, String> mobileEmulation = new HashMap<>();
+            mobileEmulation.put("deviceName", deviceName);
+            options.setExperimentalOption("mobileEmulation", mobileEmulation);
+        } else if (windowSize != null && !windowSize.isBlank()) {
+            String[] dims = windowSize.split(",");
+            if (dims.length == 2) {
+                options.addArguments(String.format("--window-size=%s,%s", dims[0], dims[1]));
+            }
         }
 
-        return chromeOptions;
+        if (isRemote) {
+            Map<String, Object> selenoidOptions = new HashMap<>();
+            selenoidOptions.put("enableVideo", true);
+            selenoidOptions.put("name", testName);
+            options.setCapability("selenoid:options", selenoidOptions); // <- именно так для RemoteWebDriver
+        }
+
+        if (browserVersion != null && !browserVersion.isBlank()) {
+            options.setCapability("browserVersion", browserVersion);
+        }
+
+        return options;
     }
 }

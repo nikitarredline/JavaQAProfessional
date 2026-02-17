@@ -6,6 +6,8 @@ import annotations.Urls;
 import com.google.inject.Inject;
 import commons.AbsCommon;
 import exceptions.PathNotFoundException;
+import org.openqa.selenium.By;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
@@ -89,28 +91,54 @@ public abstract class AbsBasePage<T> extends AbsCommon {
         return (T)this;
     }
 
-    public T pageHeaderShouldBeSameAs(String header) {
-        assertThat(this.header.getText())
-                .as("Error")
-                .isEqualTo(header);
+    public T pageHeaderShouldBeSameAs(String expectedHeader) {
+        int attempts = 3;
+        while (attempts > 0) {
+            try {
+                // проверяем текст текущего header
+                String actualText = header.getText();
+                assertThat(actualText)
+                        .as("Error")
+                        .isEqualTo(expectedHeader);
 
-        return (T)(this);
+                return (T) this;
+            } catch (StaleElementReferenceException e) {
+                attempts--;
+            }
+        }
+
+        throw new RuntimeException("Заголовок не совпал с ожидаемым: " + expectedHeader);
     }
 
     public T pageCheckboxTrueShouldBeSameAs(String expectedText) {
-        WebElement target = getCheckbox().stream()
-                .filter(el -> el.getText().equals(expectedText))
-                .findFirst()
-                .orElseThrow(() -> new RuntimeException(
-                        "Элемент с текстом '" + expectedText + "' не найден"));
+        int attempts = 3;
+        while (attempts > 0) {
+            try {
+                WebElement target = getCheckbox().stream()
+                        .filter(el -> {
+                            try {
+                                return el.getText().equals(expectedText);
+                            } catch (StaleElementReferenceException e) {
+                                return false;
+                            }
+                        })
+                        .findFirst()
+                        .orElseThrow(() -> new RuntimeException(
+                                "Элемент с текстом '" + expectedText + "' не найден"));
 
-        assertThat(target.getText())
-                .as("Error")
-                .isEqualTo(expectedText);
+                assertThat(target.getText())
+                        .as("Error")
+                        .isEqualTo(expectedText);
 
-        return (T) this;
+                return (T) this;
+
+            } catch (StaleElementReferenceException e) {
+                attempts--;
+            }
+        }
+
+        throw new RuntimeException("Не удалось найти стабильный элемент с текстом: " + expectedText);
     }
-
 
     public static final DateTimeFormatter RUS_DATE =
             DateTimeFormatter.ofPattern("d MMMM, yyyy", new Locale("ru"));

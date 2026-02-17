@@ -12,6 +12,7 @@ import java.util.Random;
 
 @Path("/")
 public class MainPage extends AbsBasePage<MainPage> {
+
     @Inject
     private CoursesPage coursesPage;
 
