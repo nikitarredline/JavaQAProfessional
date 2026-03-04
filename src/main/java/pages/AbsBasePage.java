@@ -6,9 +6,7 @@ import annotations.Urls;
 import com.google.inject.Inject;
 import commons.AbsCommon;
 import exceptions.PathNotFoundException;
-import org.openqa.selenium.By;
-import org.openqa.selenium.StaleElementReferenceException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
@@ -142,4 +140,26 @@ public abstract class AbsBasePage<T> extends AbsCommon {
 
     public static final DateTimeFormatter RUS_DATE =
             DateTimeFormatter.ofPattern("d MMMM, yyyy", new Locale("ru"));
+
+    public void clickElement(WebElement element) {
+        int attempts = 2;
+        while (attempts > 0) {
+            try {
+                // скролл к центру
+                ((JavascriptExecutor) driver)
+                        .executeScript("arguments[0].scrollIntoView({block:'center'});", element);
+
+                element.click();
+                return;
+            } catch (ElementClickInterceptedException e) {
+                // fallback через JS click
+                ((JavascriptExecutor) driver)
+                        .executeScript("arguments[0].click();", element);
+                return;
+            } catch (StaleElementReferenceException e) {
+                attempts--;
+                if (attempts == 0) throw e;
+            }
+        }
+    }
 }

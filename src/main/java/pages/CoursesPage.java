@@ -39,7 +39,12 @@ public class CoursesPage extends AbsBasePage<CoursesPage> {
     }
 
     public CoursePage clickCourseByName(String courseName) {
-        this.clickElementByPredicate.accept(getCourses(), (WebElement element) -> element.getText().equals(courseName));
+        WebElement target = getCourses().stream()
+                .filter(el -> el.getText().equals(courseName))
+                .findFirst()
+                .orElseThrow();
+
+        clickElement(target);
         return coursePage;
     }
 

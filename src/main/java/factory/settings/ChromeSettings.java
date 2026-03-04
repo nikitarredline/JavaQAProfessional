@@ -42,9 +42,9 @@ public class ChromeSettings {
 
         if (isRemote) {
             Map<String, Object> selenoidOptions = new HashMap<>();
-            selenoidOptions.put("enableVideo", true);
+            selenoidOptions.put("enableVideo", false);
             selenoidOptions.put("name", testName);
-            options.setCapability("selenoid:options", selenoidOptions); // <- именно так для RemoteWebDriver
+            options.setCapability("selenoid:options", selenoidOptions);
         }
 
         if (browserVersion != null && !browserVersion.isBlank()) {

@@ -1,0 +1,6 @@
+---
+networks:
+  - name: network1
+    external_net: selenoid1
+  - name: network2
+  external_net: selenoid2
