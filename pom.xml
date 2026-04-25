@@ -15,6 +15,9 @@
         <guice.version>7.0.0</guice.version>
         <assertj.version>3.27.6</assertj.version>
         <jsoup.version>1.21.2</jsoup.version>
+        <allure-junit5.version>2.34.0</allure-junit5.version>
+        <allure-maven.version>2.12.0</allure-maven.version>
+        <aspectj.version>1.9.22</aspectj.version>
 
         <maven.version>3.13.0</maven.version>
         <maven.compiler.source>21</maven.compiler.source>
@@ -62,6 +65,24 @@
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
         </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit5</artifactId>
+            <version>${allure-junit5.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit-platform</artifactId>
+            <version>${allure-junit5.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -92,6 +113,20 @@
                     <systemPropertyVariables>
                         <base.url>${base.url}</base.url>
                         <browser.name>${browser.name}</browser.name>
+
+                        <allure.results.directory>${project.build.directory}/allure-results</allure.results.directory>
+
+                    <argLine>
+                        -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/1.9.22/aspectjweaver-1.9.22.jar"
+                    </argLine>
+
+                    <properties>
+                        <configurationParameters>
+                            junit.jupiter.extensions.autodetection.enabled = true
+                        </configurationParameters>
+                    </properties>
+
+                    <useModulePath>false</useModulePath>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
@@ -129,6 +164,13 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+
+            <!-- Allure -->
+            <plugin>
+                <groupId>io.qameta.allure</groupId>
+                <artifactId>allure-maven</artifactId>
+                <version>${allure-maven.version}</version>
             </plugin>
         </plugins>
     </build>
