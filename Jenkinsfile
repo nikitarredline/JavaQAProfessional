@@ -23,6 +23,7 @@ pipeline {
                 '''
             }
         }
+    }
 
     post {
         always {
