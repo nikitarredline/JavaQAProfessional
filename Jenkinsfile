@@ -24,20 +24,17 @@ pipeline {
             }
         }
 
-        stage('Allure Report') {
-            steps {
-                allure([
-                    includeProperties: false,
-                    reportBuildPolicy: 'ALWAYS',
-                    results: [[path: 'target/allure-results']]
-                ])
-            }
-        }
-    }
-
     post {
         always {
-            echo "UI TESTS FINISHED"
+            echo "GENERATING ALLURE REPORT"
+
+            allure([
+                includeProperties: false,
+                reportBuildPolicy: 'ALWAYS',
+                results: [[path: 'target/allure-results']]
+            ])
+
+            echo "PIPELINE FINISHED"
         }
     }
 }
