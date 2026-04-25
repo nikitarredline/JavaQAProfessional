@@ -1,13 +1,6 @@
 pipeline {
     agent any
 
-    parameters {
-        string(name: 'SELENOID_URL', defaultValue: '', description: '')
-        string(name: 'BROWSER', defaultValue: '', description: '')
-        string(name: 'BROWSER_VERSION', defaultValue: '', description: '')
-        string(name: 'DEVICE_NAME', defaultValue: '', description: '')
-    }
-
     stages {
 
         stage('Run tests') {
