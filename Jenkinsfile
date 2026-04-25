@@ -3,36 +3,24 @@ pipeline {
 
     stages {
 
-        stage('Run tests') {
+        stage('Checkout info') {
             steps {
-                script {
+                echo "Running UI tests from homework_4 branch"
+            }
+        }
 
-                    def args = ""
-
-                    if (params.SELENOID_URL?.trim()) {
-                        args += " -Dremote.url=${params.SELENOID_URL}"
-                    }
-
-                    if (params.BROWSER?.trim()) {
-                        args += " -Dbrowser.name=${params.BROWSER}"
-                    }
-
-                    if (params.BROWSER_VERSION?.trim()) {
-                        args += " -Dbrowser.version=${params.BROWSER_VERSION}"
-                    }
-
-                    if (params.DEVICE_NAME?.trim()) {
-                        args += " -DdeviceName=${params.DEVICE_NAME}"
-                    }
-
-                    sh """
-                        docker run --rm \
-                          -v /root/jenkins_home/workspace/ui_tests:/workspace \
-                          -w /workspace \
-                          maven:3.9.9-eclipse-temurin-21 \
-                          mvn clean test ${args}
-                    """
-                }
+        stage('Run UI tests') {
+            steps {
+                sh '''
+                    docker run --rm \
+                      -v /root/jenkins_home/workspace/ui_tests:/workspace \
+                      -w /workspace \
+                      maven:3.9.9-eclipse-temurin-21 \
+                      mvn clean test \
+                      -Dremote.url=http://89.124.113.71/wd/hub \
+                      -Dbrowser.name=chrome \
+                      -Dbrowser.version=128.0
+                '''
             }
         }
 
@@ -49,7 +37,7 @@ pipeline {
 
     post {
         always {
-            echo "PIPELINE FINISHED"
+            echo "UI TESTS FINISHED"
         }
     }
 }
