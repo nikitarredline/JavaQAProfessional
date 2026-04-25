@@ -20,21 +20,21 @@ public class MainPage extends AbsBasePage<MainPage> {
     @FindBy(css = "nav a[href*='/categories/']")
     private List<WebElement> categories;
 
-    private List<WebElement> get—ategories() {
+    private List<WebElement> getCategories() {
         waiter.waitForCondition(d -> !categories.isEmpty());
         return categories;
     }
 
     public String getRandomCategory() {
-        int randomIndex = RANDOM.nextInt(get—ategories().size());
-        return get—ategories().get(randomIndex).getAttribute("textContent").split(" \\(")[0];
+        int randomIndex = RANDOM.nextInt(getCategories().size());
+        return getCategories().get(randomIndex).getAttribute("textContent").split(" \\(")[0];
     }
 
     public CoursesPage clickCategoryByName(String categoryName) {
-        WebElement training = driver.findElement(By.cssSelector("span[title='Œ·Û˜ÂÌËÂ']"));
+        WebElement training = driver.findElement(By.cssSelector("span[title='ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ']"));
         Actions actions = new Actions(driver);
         actions.moveToElement(training).perform();
-        this.clickElementByPredicate.accept(get—ategories(), (WebElement element) -> element.getAttribute("textContent").split(" \\(")[0].equals(categoryName));
+        this.clickElementByPredicate.accept(getCategories(), (WebElement element) -> element.getAttribute("textContent").split(" \\(")[0].equals(categoryName));
         return coursesPage;
     }
 }
