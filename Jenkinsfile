@@ -3,9 +3,11 @@ pipeline {
 
     stages {
 
-        stage('Checkout info') {
+        stage('Pull image') {
             steps {
-                echo "Running UI tests from homework_4 branch"
+                sh '''
+                    docker pull 89.124.113.71:5005/ui-tests:1.0
+                '''
             }
         }
 
@@ -15,11 +17,11 @@ pipeline {
                     docker run --rm \
                       -v /root/jenkins_home/workspace/ui_tests:/workspace \
                       -w /workspace \
-                      maven:3.9.9-eclipse-temurin-21 \
+                      89.124.113.71:5005/ui-tests:1.0 \
                       mvn clean test \
-                      -Dremote.url=http://89.124.113.71/wd/hub \
-                      -Dbrowser.name=chrome \
-                      -Dbrowser.version=128.0
+                        -Dremote.url=http://89.124.113.71/wd/hub \
+                        -Dbrowser.name=chrome \
+                        -Dbrowser.version=128.0
                 '''
             }
         }
